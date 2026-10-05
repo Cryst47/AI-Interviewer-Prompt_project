@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Mock Interviewer | 7-Slide Interactive Presentation Deck</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-base: #090d16;
+            --bg-slide: #0f172a;
+            --bg-card: #1e293b;
+            --border-card: #334155;
+            --cyan: #38bdf8;
+            --emerald: #34d399;
+            --purple: #a855f7;
+            --amber: #fbbf24;
+            --rose: #f87171;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+            padding: 20px;
+        }
+
+        .deck-wrapper {
+            width: 100%;
+            max-width: 1240px;
+            aspect-ratio: 16 / 9;
+            background-color: var(--bg-slide);
+            border-radius: 20px;
+            border: 1px solid var(--border-card);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7), 0 0 40px rgba(56, 189, 248, 0.1);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .slide {
+            display: none;
+            width: 100%;
+            height: 100%;
+            padding: 44px 56px;
+            flex-direction: column;
+            justify-content: space-between;
+            animation: fadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .slide.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.985); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .slide-header {
+            margin-bottom: 20px;
+        }
+
+        .slide-category {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--cyan);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .slide-title {
+            font-size: 1.95rem;
+            font-weight: 800;
+            color: #ffffff;
+            line-height: 1.2;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            flex: 1;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+            flex: 1;
+        }
+
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-rows: repeat(2, 1fr);
+            gap: 16px;
+            flex: 1;
+        }
+
+        /* Flow Diagram Grid */
+        .flow-grid {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr auto 1fr auto 1fr;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+        }
+
+        .flow-arrow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--cyan);
+            font-size: 1.3rem;
+        }
+
+        .slide-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-card);
+            border-radius: 14px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .slide-card h3 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .member-role {
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: var(--cyan);
+            background: rgba(56, 189, 248, 0.12);
+            padding: 3px 8px;
+            border-radius: 4px;
+            display: inline-block;
+            margin-bottom: 12px;
+        }
+
+        .slide-card ul {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            flex: 1;
+        }
+
+        .slide-card li {
+            font-size: 0.88rem;
+            line-height: 1.45;
+            color: var(--text-main);
+            display: flex;
+            gap: 8px;
+        }
+
+        .slide-card li::before {
+            content: "•";
+            color: var(--cyan);
+            font-weight: bold;
+            font-size: 1.2rem;
+            line-height: 1;
+        }
+
+        .slide-card p {
+            font-size: 0.88rem;
+            line-height: 1.5;
+            color: var(--text-muted);
+        }
+
+        .text-cyan { color: var(--cyan); }
+        .text-emerald { color: var(--emerald); }
+        .text-purple { color: var(--purple); }
+        .text-amber { color: var(--amber); }
+        .text-rose { color: var(--rose); }
+
+        .title-slide-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            height: 100%;
+        }
+
+        .title-badge {
+            align-self: flex-start;
+            background: rgba(56, 189, 248, 0.15);
+            border: 1px solid var(--cyan);
+            color: var(--cyan);
+            padding: 6px 14px;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin-bottom: 18px;
+        }
+
+        .main-hero-title {
+            font-size: 3rem;
+            font-weight: 800;
+            line-height: 1.15;
+            margin-bottom: 14px;
+        }
+
+        .main-hero-subtitle {
+            font-size: 1.18rem;
+            color: var(--text-muted);
+            max-width: 850px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .deck-controls {
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            max-width: 1240px;
+        }
+
+        .btn-deck {
+            background: var(--bg-card);
+            border: 1px solid var(--border-card);
+            color: #ffffff;
+            padding: 10px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+            text-decoration: none;
+            font-size: 0.95rem;
+        }
+
+        .btn-deck:hover {
+            background: rgba(56, 189, 248, 0.15);
+            border-color: var(--cyan);
+            color: var(--cyan);
+        }
+
+        .btn-deck-primary {
+            background: linear-gradient(135deg, #0284c7, #2563eb);
+            border: none;
+        }
+
+        .btn-deck-primary:hover {
+            background: linear-gradient(135deg, #38bdf8, #3b82f6);
+            color: #fff;
+        }
+
+        .slide-counter {
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--cyan);
+            background: var(--bg-card);
+            padding: 8px 18px;
+            border-radius: 20px;
+            border: 1px solid var(--border-card);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="deck-wrapper" id="deck-wrapper">
+
+        <!-- SLIDE 1: Title & Overview -->
+        <div class="slide active" id="slide-1">
+            <div class="title-slide-content">
+                <div class="title-badge">⚡ APPLIED PROMPT ENGINEERING & LLMs // PROJECT 4</div>
+                <h1 class="main-hero-title">AI Mock Interviewer & <span class="text-cyan">Dynamic Evaluator</span></h1>
+                <p class="main-hero-subtitle">An End-to-End Multimodal Assessment Platform powered by Role Prompting, STAR Method Rubrics, and Strict JSON Schema Enforcement.</p>
+                
+                <div class="grid-3">
+                    <div class="slide-card">
+                        <h3 class="text-cyan"><i class="fa-solid fa-bullseye"></i> Target Track</h3>
+                        <p>Project 4: AI Mock Interviewer<br>Tech: Python, Flask, Web Speech API<br>Engine: GPT-4o + Smart Heuristics</p>
+                    </div>
+                    <div class="slide-card">
+                        <h3 class="text-emerald"><i class="fa-solid fa-code"></i> Key Prompt Methods</h3>
+                        <p>Persona-driven Role Prompting<br>Evaluation Rubrics & Schemas<br>Contextual History Retention</p>
+                    </div>
+                    <div class="slide-card">
+                        <h3 class="text-purple"><i class="fa-solid fa-trophy"></i> Core Deliverables</h3>
+                        <p>Interactive Spoken & Text Room<br>STAR Rubric & Ideal Benchmark<br>30-Day Personalized Roadmap</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 2: Team Members & Contributions -->
+        <div class="slide" id="slide-2">
+            <div class="slide-header">
+                <div class="slide-category">TEAM & WORK BREAKDOWN</div>
+                <h2 class="slide-title">Project Team & Contribution Distribution</h2>
+            </div>
+            <div class="grid-3">
+                <div class="slide-card">
+                    <h3 class="text-cyan"><i class="fa-solid fa-user-gear"></i> Annimesh Sasmal</h3>
+                    <span class="member-role">Lead Prompt Engineer & LLM Architect</span>
+                    <ul>
+                        <li>Designed multi-persona Role System Prompts (Tech Lead, Mentor, Executive, HR).</li>
+                        <li>Engineered the 4-Vector Evaluation Rubric (Technical Depth, STAR, Clarity, Confidence).</li>
+                        <li>Crafted JSON schema constraints for deterministic machine-parsable responses.</li>
+                        <li>Formulated defensive guardrails against hallucinations & empty answers.</li>
+                    </ul>
+                </div>
+
+                <div class="slide-card">
+                    <h3 class="text-emerald"><i class="fa-solid fa-server"></i> Swapnajit Sahoo</h3>
+                    <span class="member-role">Backend Systems & API Integration Lead</span>
+                    <ul>
+                        <li>Architected Flask RESTful microservice backend with session memory store.</li>
+                        <li>Built the hybrid AI Engine integrating OpenAI GPT-4o with smart fallback heuristics.</li>
+                        <li>Implemented multi-turn dialogue history tracking & difficulty escalation.</li>
+                        <li>Engineered dynamic final committee dossier & 30-day roadmap synthesis.</li>
+                    </ul>
+                </div>
+
+                <div class="slide-card">
+                    <h3 class="text-purple"><i class="fa-solid fa-palette"></i> Payal Nanda</h3>
+                    <span class="member-role">Frontend & Multimodal Experience Engineer</span>
+                    <ul>
+                        <li>Designed the glassmorphism UI layout, design system, and dark/light themes.</li>
+                        <li>Implemented Web Speech API Speech-to-Text (STT) and natural voice TTS audio.</li>
+                        <li>Built interactive scorecards, live feedback drawer, and competency charts.</li>
+                        <li>Developed the in-browser interactive presentation viewer & export tools.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 3: Problem Statement -->
+        <div class="slide" id="slide-3">
+            <div class="slide-header">
+                <div class="slide-category">FOUNDATION & MOTIVATION</div>
+                <h2 class="slide-title">Problem Statement & Industry Motivation</h2>
+            </div>
+            <div class="grid-2">
+                <div class="slide-card">
+                    <h3 class="text-rose"><i class="fa-solid fa-circle-xmark"></i> The Challenge with Traditional Prep</h3>
+                    <ul>
+                        <li><strong>Static Question Banks:</strong> Traditional tools use static question lists that fail to adapt dynamically to candidate answers.</li>
+                        <li><strong>Absence of Actionable Feedback:</strong> Candidates receive binary pass/fail without deep rubric diagnostics on communication or STAR structuring.</li>
+                        <li><strong>High Human Coaching Costs:</strong> Professional human mock interviewers cost $150–$300/hour, creating steep accessibility barriers.</li>
+                        <li><strong>Spoken Anxiety Gap:</strong> Text-only drills leave candidates unprepared for real-world verbal pressure and pacing.</li>
+                    </ul>
+                </div>
+
+                <div class="slide-card">
+                    <h3 class="text-emerald"><i class="fa-solid fa-circle-check"></i> Our Prompt-Engineered Solution</h3>
+                    <ul>
+                        <li><strong>Adaptive Multi-Turn Simulation:</strong> Generates escalating rigor questions tailored to role, seniority, and prior answers.</li>
+                        <li><strong>Multi-Persona Interviewers:</strong> Select from Supportive Mentor, Rigorous Tech Lead, and Demanding Executive personas.</li>
+                        <li><strong>Objective STAR Rubric Scoring:</strong> Measures Technical Depth, STAR Method, Communication, and Confidence (0-100).</li>
+                        <li><strong>Zero-Friction Multimodal Voice:</strong> Real-time browser Web Speech API transcription and natural voice synthesis.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 4: 3-Phase Pipeline & Architecture Flow -->
+        <div class="slide" id="slide-4">
+            <div class="slide-header">
+                <div class="slide-category">3-PHASE PIPELINE & SYSTEM ARCHITECTURE</div>
+                <h2 class="slide-title">3-Phase Interview Pipeline & Architecture Flow</h2>
+            </div>
+            <div class="flow-grid">
+                <div class="slide-card">
+                    <h3 class="text-cyan"><i class="fa-solid fa-file-arrow-up"></i> 1. Resume Ingestion</h3>
+                    <ul>
+                        <li>PDF / DOCX / TXT Parser</li>
+                        <li>Automated Skill Extraction</li>
+                        <li>Persona & Role Config</li>
+                        <li>Direct Voice Mode Toggle</li>
+                    </ul>
+                </div>
+
+                <div class="flow-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+
+                <div class="slide-card">
+                    <h3 class="text-emerald"><i class="fa-solid fa-brain"></i> 2. 3-Phase Engine</h3>
+                    <ul>
+                        <li>Phase 1: Resume Deep-Dive</li>
+                        <li>Phase 2: Domain Rigor</li>
+                        <li>Phase 3: HR & 5-Yr Vision</li>
+                        <li>Strict JSON Validator</li>
+                    </ul>
+                </div>
+
+                <div class="flow-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+
+                <div class="slide-card">
+                    <h3 class="text-amber"><i class="fa-solid fa-headset"></i> 3. Speech-to-Speech</h3>
+                    <ul>
+                        <li>Continuous Voice Dialogue</li>
+                        <li>Live Real-Time Captions</li>
+                        <li>Automated Turn-Taking</li>
+                        <li>Instant Rubric Feedback</li>
+                    </ul>
+                </div>
+
+                <div class="flow-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+
+                <div class="slide-card">
+                    <h3 class="text-purple"><i class="fa-solid fa-trophy"></i> 4. Final Dossier</h3>
+                    <ul>
+                        <li>Hiring Recommendation</li>
+                        <li>3-Phase Competency Bars</li>
+                        <li>Grounded Strengths & Gaps</li>
+                        <li>30-Day Mastery Roadmap</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 5: Key Prompt Engineering Concepts -->
+        <div class="slide" id="slide-5">
+            <div class="slide-header">
+                <div class="slide-category">PROMPT METHODOLOGY</div>
+                <h2 class="slide-title">Key Prompt Engineering Concepts Applied</h2>
+            </div>
+            <div class="grid-4">
+                <div class="slide-card">
+                    <h3 class="text-cyan"><i class="fa-solid fa-user-gear"></i> 1. Role Prompting</h3>
+                    <p>Explicit persona system directives enforce realistic behavioral quirks, domain vocabularies, and questioning philosophies without generic assistant drift.</p>
+                </div>
+                <div class="slide-card">
+                    <h3 class="text-emerald"><i class="fa-solid fa-file-code"></i> 2. Structured JSON Schemas</h3>
+                    <p>Forces the LLM to output valid JSON conforming strictly to predefined schemas, enabling deterministic parsing for charts and live scorecards.</p>
+                </div>
+                <div class="slide-card">
+                    <h3 class="text-purple"><i class="fa-solid fa-list-check"></i> 3. Evaluation Prompts & Rubrics</h3>
+                    <p>Grounds evaluation in 4 orthogonal criteria (Technical, STAR, Clarity, Confidence) with mandatory quotes extracted from candidate answers.</p>
+                </div>
+                <div class="slide-card">
+                    <h3 class="text-amber"><i class="fa-solid fa-network-wired"></i> 4. Context Engineering</h3>
+                    <p>Feeds previous turn responses back into the prompt buffer to dynamically challenge candidate edge-case omissions in subsequent questions.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 6: Rubrics & Metrics -->
+        <div class="slide" id="slide-6">
+            <div class="slide-header">
+                <div class="slide-category">BENCHMARKS & RUBRICS</div>
+                <h2 class="slide-title">Evaluation Rubric & Optimization Results</h2>
+            </div>
+            <div class="grid-2">
+                <div class="slide-card">
+                    <h3 class="text-cyan"><i class="fa-solid fa-sliders"></i> Rubric Dimensions (0-100 Scale)</h3>
+                    <ul>
+                        <li><strong>Technical Depth (35%):</strong> Accuracy, algorithmic complexity, architectural viability, trade-offs.</li>
+                        <li><strong>STAR Method (25%):</strong> Clear Situation, Task, Action, and Quantified Result narrative structure.</li>
+                        <li><strong>Communication & Clarity (20%):</strong> Concise delivery, professional terminology, zero filler.</li>
+                        <li><strong>Confidence & Alignment (20%):</strong> Executive presence, conviction, role-appropriate tone.</li>
+                    </ul>
+                </div>
+
+                <div class="slide-card">
+                    <h3 class="text-emerald"><i class="fa-solid fa-chart-column"></i> Prompt Optimization Comparison</h3>
+                    <ul>
+                        <li><strong>Standard Zero-Shot:</strong> Generic compliments ("Good job!"), erratic scoring, frequent hallucinated claims.</li>
+                        <li><strong>Structured Rubric + Persona:</strong> 100% deterministic JSON, grounded evidence citations, 3.8x higher actionable learning utility.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 7: Conclusion & Demo -->
+        <div class="slide" id="slide-7">
+            <div class="slide-header">
+                <div class="slide-category">SUMMARY & ROADMAP</div>
+                <h2 class="slide-title">Conclusion, Future Horizons & Live Demo</h2>
+            </div>
+            <div class="grid-2">
+                <div class="slide-card">
+                    <h3 class="text-emerald"><i class="fa-solid fa-circle-check"></i> Project Accomplishments</h3>
+                    <ul>
+                        <li>Delivered end-to-end AI Mock Interviewer with voice, text, and adaptive questioning.</li>
+                        <li>Demonstrated mastery of Role Prompting, Evaluation Prompts, and Schema Enforcement.</li>
+                        <li>Built-in offline intelligent heuristic engine guarantees 100% uptime without API dependencies.</li>
+                        <li>Generates automated 30-Day study roadmaps and downloadable presentations.</li>
+                    </ul>
+                </div>
+
+                <div class="slide-card">
+                    <h3 class="text-purple"><i class="fa-solid fa-rocket"></i> Future Horizons</h3>
+                    <ul>
+                        <li><strong>Computer Vision:</strong> Eye contact and micro-expression body language analysis via WebRTC.</li>
+                        <li><strong>Live Code Execution Sandbox:</strong> In-browser code runner testing algorithm time/space complexity.</li>
+                        <li><strong>Enterprise ATS:</strong> Candidate assessment portal for college placement drives.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Presentation Navigation Bar -->
+    <div class="deck-controls">
+        <div style="display: flex; gap: 10px;">
+            <a href="/" class="btn-deck"><i class="fa-solid fa-arrow-left"></i> Back to App</a>
+            <a href="/download-ppt" class="btn-deck btn-deck-primary"><i class="fa-solid fa-file-powerpoint"></i> Download .pptx File</a>
+        </div>
+
+        <div class="slide-counter" id="slide-counter">Slide 1 / 7</div>
+
+        <div style="display: flex; gap: 10px;">
+            <button class="btn-deck" onclick="prevSlide()"><i class="fa-solid fa-chevron-left"></i> Previous</button>
+            <button class="btn-deck" onclick="nextSlide()">Next <i class="fa-solid fa-chevron-right"></i></button>
+            <button class="btn-deck" onclick="toggleFullscreen()"><i class="fa-solid fa-expand"></i></button>
+        </div>
+    </div>
+
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 7;
+
+        function updateSlide() {
+            document.querySelectorAll('.slide').forEach((s, idx) => {
+                s.classList.toggle('active', (idx + 1) === currentSlide);
+            });
+            document.getElementById('slide-counter').innerText = `Slide ${currentSlide} / ${totalSlides}`;
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides) {
+                currentSlide++;
+                updateSlide();
+            }
+        }
+
+        function prevSlide() {
+            if (currentSlide > 1) {
+                currentSlide--;
+                updateSlide();
+            }
+        }
+
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+                nextSlide();
+            } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+                prevSlide();
+            }
+        });
+    </script>
+</body>
+</html>

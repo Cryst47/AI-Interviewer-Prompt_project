@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Mock Interview & Evaluator | 3-Phase Multimodal Platform</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body class="dark-theme">
+    <!-- Main App Container -->
+    <div class="app-layout">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="brand">
+                <div class="brand-icon">
+                    <i class="fa-solid fa-brain"></i>
+                </div>
+                <div class="brand-text">
+                    <h2>TalentAI <span class="badge-tag">3-PHASE</span></h2>
+                    <p>Prompt-Engineered Evaluator</p>
+                </div>
+            </div>
+
+            <nav class="nav-menu">
+                <button class="nav-item active" id="nav-setup" onclick="switchView('setup')">
+                    <i class="fa-solid fa-sliders"></i>
+                    <span>Interview Setup</span>
+                </button>
+                <button class="nav-item" id="nav-room" onclick="switchView('room')" disabled>
+                    <i class="fa-solid fa-microphone-lines"></i>
+                    <span>Live Interview Room</span>
+                </button>
+                <button class="nav-item" id="nav-report" onclick="switchView('report')" disabled>
+                    <i class="fa-solid fa-chart-line"></i>
+                    <span>Scorecard & Report</span>
+                </button>
+                <button class="nav-item" id="nav-prompts" onclick="switchView('prompts')">
+                    <i class="fa-solid fa-terminal"></i>
+                    <span>Prompt Architecture</span>
+                </button>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="system-status">
+                    <span class="status-dot online"></span>
+                    <span>AI Engine: Active & Ready</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Top Navbar -->
+            <header class="top-header">
+                <div class="header-left">
+                    <h1 id="page-title">Interview Configuration & 3-Phase Pipeline</h1>
+                    <p id="page-subtitle">Configure target role, upload resume (PDF/DOCX), and choose communication mode</p>
+                </div>
+                <div class="header-actions">
+                    <button class="btn btn-icon" id="theme-toggle" onclick="toggleTheme()" title="Toggle Theme">
+                        <i class="fa-solid fa-moon"></i>
+                    </button>
+                    <button class="btn btn-outline btn-sm" onclick="openApiKeyModal()">
+                        <i class="fa-solid fa-key"></i>
+                        <span id="api-key-label">API Settings</span>
+                    </button>
+                </div>
+            </header>
+
+            <!-- VIEW 1: INTERVIEW SETUP -->
+            <section id="view-setup" class="view-panel active">
+                <!-- 3-Phase Pipeline Overview Bar -->
+                <div class="pipeline-banner card mb-4">
+                    <div class="pipeline-steps">
+                        <div class="pipe-step">
+                            <div class="pipe-icon pipe-blue"><i class="fa-solid fa-file-invoice"></i></div>
+                            <div class="pipe-info">
+                                <span class="pipe-tag text-cyan">ROUND 1</span>
+                                <h4>Phase 1: Resume Deep-Dive</h4>
+                                <p>Drills into your projects, tools & claims</p>
+                            </div>
+                        </div>
+                        <div class="pipe-connector"><i class="fa-solid fa-chevron-right"></i></div>
+                        <div class="pipe-step">
+                            <div class="pipe-icon pipe-emerald"><i class="fa-solid fa-cubes-stacked"></i></div>
+                            <div class="pipe-info">
+                                <span class="pipe-tag text-emerald">ROUND 2</span>
+                                <h4>Phase 2: Domain Technical Rigor</h4>
+                                <p>System design, architecture & trade-offs</p>
+                            </div>
+                        </div>
+                        <div class="pipe-connector"><i class="fa-solid fa-chevron-right"></i></div>
+                        <div class="pipe-step">
+                            <div class="pipe-icon pipe-amber"><i class="fa-solid fa-compass"></i></div>
+                            <div class="pipe-info">
+                                <span class="pipe-tag text-amber">ROUND 3</span>
+                                <h4>Phase 3: HR, Leadership & Vision</h4>
+                                <p>Leadership, behavioral & career aspirations</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="setup-grid">
+                    <!-- Left Card: Position & Resume Upload -->
+                    <div class="card setup-card main-config">
+                        <div class="card-header">
+                            <h3><i class="fa-solid fa-briefcase text-cyan"></i> Target Position & Resume Upload</h3>
+                        </div>
+                        <div class="card-body form-stack">
+                            <div class="form-row-2">
+                                <div class="form-group">
+                                    <label for="role-select"><i class="fa-solid fa-user-gear text-cyan"></i> Target Job Role</label>
+                                    <select id="role-select" class="form-control select-custom" onchange="handleCustomRole(this)">
+                                        <option value="Full Stack Software Engineer">Full Stack Software Engineer</option>
+                                        <option value="Senior Backend & Systems Architect">Senior Backend & Systems Architect</option>
+                                        <option value="Data Scientist & Machine Learning Engineer">Data Scientist & Machine Learning Engineer</option>
+                                        <option value="Product Manager (Technical / AI)">Product Manager (Technical / AI)</option>
+                                        <option value="DevOps & Cloud Reliability Engineer">DevOps & Cloud Reliability Engineer</option>
+                                        <option value="custom">-- Custom Role (Specify below) --</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="experience-select"><i class="fa-solid fa-ranking-star text-emerald"></i> Candidate Seniority Level</label>
+                                    <select id="experience-select" class="form-control select-custom">
+                                        <option value="Entry-Level / Graduate (0-2 Years)">Entry-Level / Graduate (0-2 Years)</option>
+                                        <option value="Mid-Level Engineer (3-5 Years)" selected>Mid-Level Engineer (3-5 Years)</option>
+                                        <option value="Senior Staff / Lead (6+ Years)">Senior Staff / Lead (6+ Years)</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group" id="custom-role-group" style="display:none;">
+                                <label for="custom-role-input"><i class="fa-solid fa-pen-to-square text-cyan"></i> Custom Job Role Title</label>
+                                <input type="text" id="custom-role-input" class="form-control" placeholder="e.g. AI Research Scientist, Mobile Lead...">
+                            </div>
+
+                            <div class="form-row-2">
+                                <div class="form-group">
+                                    <label for="interview-type-select"><i class="fa-solid fa-compass-drafting text-purple"></i> Interview Rigor Format</label>
+                                    <select id="interview-type-select" class="form-control select-custom">
+                                        <option value="Full 3-Phase Comprehensive (Resume + Domain + HR/Vision)" selected>Full 3-Phase Comprehensive (Resume + Domain + HR/Vision)</option>
+                                        <option value="Deep Technical & System Architecture">Deep Technical & System Architecture</option>
+                                        <option value="Behavioral & STAR Leadership">Behavioral & STAR Leadership</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="total-q-select"><i class="fa-solid fa-list-ol text-amber"></i> Total Question Rounds</label>
+                                    <select id="total-q-select" class="form-control select-custom">
+                                        <option value="3">3 Questions (1 Per Phase: Resume ➔ Domain ➔ Vision)</option>
+                                        <option value="6" selected>6 Questions (2 Per Phase: Resume ➔ Domain ➔ Vision)</option>
+                                        <option value="9">9 Questions (3 Per Phase: Full Rigor Marathon)</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- RESUME FILE UPLOAD DROPZONE -->
+                            <div class="form-group">
+                                <label><i class="fa-solid fa-file-arrow-up text-cyan"></i> Upload Resume (PDF / DOCX / TXT)</label>
+                                <div class="resume-dropzone" id="resume-dropzone" onclick="document.getElementById('resume-file-input').click()">
+                                    <input type="file" id="resume-file-input" accept=".pdf,.docx,.txt" style="display:none;" onchange="handleResumeUpload(this.files[0])">
+                                    <div class="dropzone-content">
+                                        <i class="fa-solid fa-cloud-arrow-up dropzone-icon"></i>
+                                        <h4>Drag & Drop your Resume here or <span class="text-cyan cursor-pointer">Browse Files</span></h4>
+                                        <p class="dropzone-hint">Supports PDF, DOCX, TXT. Extracts projects & skills automatically for Phase 1 questioning.</p>
+                                    </div>
+                                </div>
+
+                                <div id="resume-file-badge" class="resume-file-badge" style="display:none;">
+                                    <div class="file-badge-left">
+                                        <i class="fa-solid fa-file-circle-check text-emerald"></i>
+                                        <span id="resume-filename">resume.pdf</span>
+                                        <span id="resume-word-count" class="badge-subtle">0 words</span>
+                                    </div>
+                                    <button type="button" class="btn-icon-sm" onclick="clearUploadedResume()"><i class="fa-solid fa-trash"></i></button>
+                                </div>
+
+                                <div id="resume-skills-tags" class="skills-tag-cloud" style="display:none;">
+                                    <span class="skills-tag-title"><i class="fa-solid fa-tags"></i> Detected Tech Stack:</span>
+                                    <div id="skills-list" class="skills-list"></div>
+                                </div>
+
+                                <textarea id="resume-context-input" class="form-control mt-2" rows="3" placeholder="Or paste snippet of resume, projects, or key skills manually..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Card: Persona & Direct Voice Mode Selector -->
+                    <div class="card setup-card persona-config">
+                        <div class="card-header">
+                            <h3><i class="fa-solid fa-user-tie text-emerald"></i> Persona & Communication Mode</h3>
+                        </div>
+                        <div class="card-body">
+                            <!-- Direct Speech-to-Speech Mode Toggle -->
+                            <div class="comm-mode-card mb-4">
+                                <div class="mode-header">
+                                    <div class="mode-icon"><i class="fa-solid fa-headset"></i></div>
+                                    <div>
+                                        <h4>Direct Speech-to-Speech Mode</h4>
+                                        <p>Real-time conversational voice interview with live closed captions</p>
+                                    </div>
+                                    <label class="switch">
+                                        <input type="checkbox" id="speech-mode-toggle" checked>
+                                        <span class="slider round"></span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <p class="section-desc">Choose your assessor's style and evaluation philosophy:</p>
+                            
+                            <div class="persona-options">
+                                <label class="persona-card active">
+                                    <input type="radio" name="persona" value="tech_lead" checked>
+                                    <div class="persona-avatar avatar-blue">
+                                        <i class="fa-solid fa-code"></i>
+                                    </div>
+                                    <div class="persona-info">
+                                        <h4>Alex (Senior Tech Lead)</h4>
+                                        <p>Inspects edge cases, latency, trade-offs, and resume project authenticity.</p>
+                                    </div>
+                                    <span class="persona-badge">Technical Rigor</span>
+                                </label>
+
+                                <label class="persona-card">
+                                    <input type="radio" name="persona" value="supportive">
+                                    <div class="persona-avatar avatar-emerald">
+                                        <i class="fa-solid fa-hand-holding-heart"></i>
+                                    </div>
+                                    <div class="persona-info">
+                                        <h4>Elena (Supportive Mentor)</h4>
+                                        <p>Encouraging, guides you with hints, evaluates growth mindset and career goals.</p>
+                                    </div>
+                                    <span class="persona-badge">Growth & Coaching</span>
+                                </label>
+
+                                <label class="persona-card">
+                                    <input type="radio" name="persona" value="tough_exec">
+                                    <div class="persona-avatar avatar-purple">
+                                        <i class="fa-solid fa-chart-line"></i>
+                                    </div>
+                                    <div class="persona-info">
+                                        <h4>Marcus (Executive Director)</h4>
+                                        <p>Fast-paced. Demands concise answers, business ROI, and sharp leadership presence.</p>
+                                    </div>
+                                    <span class="persona-badge">High Pressure</span>
+                                </label>
+
+                                <label class="persona-card">
+                                    <input type="radio" name="persona" value="behavioral_hr">
+                                    <div class="persona-avatar avatar-amber">
+                                        <i class="fa-solid fa-users"></i>
+                                    </div>
+                                    <div class="persona-info">
+                                        <h4>Sarah (Culture & HR Director)</h4>
+                                        <p>Deeply analyzes empathy, conflict resolution, leadership traits, and STAR framing.</p>
+                                    </div>
+                                    <span class="persona-badge">Culture & STAR</span>
+                                </label>
+                            </div>
+
+                            <div class="setup-cta">
+                                <button class="btn btn-primary btn-lg full-width pulse-btn" onclick="startInterviewSession()">
+                                    <i class="fa-solid fa-play"></i>
+                                    <span>Launch 3-Phase AI Interview</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- VIEW 2: LIVE INTERVIEW ROOM -->
+            <section id="view-room" class="view-panel">
+                <div class="interview-layout">
+                    <!-- Left Column: Interviewer & Question -->
+                    <div class="interview-stage card">
+                        <div class="stage-header">
+                            <div class="stage-meta">
+                                <span class="badge badge-phase" id="stage-phase-badge">Phase 1: Resume Deep-Dive</span>
+                                <span class="badge badge-cyan" id="stage-round-badge">Question 1 of 4</span>
+                                <span class="badge badge-purple" id="stage-diff-badge">Medium</span>
+                            </div>
+                            <div class="stage-controls-right">
+                                <div class="stage-timer">
+                                    <i class="fa-regular fa-clock"></i>
+                                    <span id="timer-display">00:00</span>
+                                </div>
+                                <button class="btn btn-danger-subtle btn-sm" onclick="confirmEndSession()" title="End Active Interview">
+                                    <i class="fa-solid fa-phone-slash"></i>
+                                    <span>End Session</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Interactive Speech-to-Speech HUD Overlay -->
+                        <div class="s2s-hud card" id="s2s-hud" style="display:flex;">
+                            <div class="s2s-avatar-row">
+                                <div class="s2s-voice-circle" id="s2s-voice-circle">
+                                    <i class="fa-solid fa-robot"></i>
+                                    <div class="pulse-ring"></div>
+                                </div>
+                                <div class="s2s-status-info">
+                                    <span class="s2s-badge" id="s2s-speaking-indicator">AI Speaking Question...</span>
+                                    <h4 id="s2s-phase-title">Phase 1: Resume Verification</h4>
+                                </div>
+                                <div class="s2s-actions">
+                                    <!-- Natural Voice Selector -->
+                                    <select id="voice-select" class="form-control select-custom select-sm" style="max-width: 220px;" onchange="changeInterviewerVoice(this.value)">
+                                        <option value="">Natural AI Voice (Auto)</option>
+                                    </select>
+                                    <button class="btn btn-secondary btn-sm" onclick="speakCurrentQuestion()" title="Re-speak Question">
+                                        <i class="fa-solid fa-volume-high"></i> Replay
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Live Closed Captions Stream -->
+                            <div class="caption-stream-box">
+                                <div class="caption-label"><i class="fa-solid fa-closed-captioning text-cyan"></i> Live Closed Captions</div>
+                                <div class="caption-text" id="live-caption-text">"Loading interview dialogue..."</div>
+                            </div>
+                        </div>
+
+                        <div class="interviewer-box">
+                            <div class="speech-bubble">
+                                <div class="speech-controls">
+                                    <button class="btn-icon-sm" onclick="speakCurrentQuestion()" title="Replay Voice Audio">
+                                        <i class="fa-solid fa-volume-high"></i>
+                                    </button>
+                                </div>
+                                <h3 id="current-question-text" class="question-text">Loading question...</h3>
+                            </div>
+
+                            <div class="interviewer-notes-pill">
+                                <i class="fa-solid fa-lightbulb text-amber"></i>
+                                <span><strong>Assessor's Lens:</strong> <span id="interviewer-hint">Demonstrate structured reasoning, edge cases, and quantified impact.</span></span>
+                            </div>
+                        </div>
+
+                        <!-- Candidate Response Area -->
+                        <div class="candidate-response-area">
+                            <div class="response-toolbar">
+                                <span class="toolbar-label"><i class="fa-solid fa-keyboard"></i> Your Response (Spoken or Written)</span>
+                                <div class="voice-actions">
+                                    <button id="ai-model-answer-btn" type="button" class="btn btn-ai-answer" onclick="toggleAiModelAnswer()" title="See how a top candidate would answer">
+                                        <i class="fa-solid fa-wand-magic-sparkles text-purple"></i>
+                                        <span>AI Model Answer</span>
+                                    </button>
+                                    <button id="mic-btn" class="btn btn-mic" onclick="toggleVoiceInput()">
+                                        <i class="fa-solid fa-microphone"></i>
+                                        <span id="mic-btn-label">Speak Answer</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- AI Benchmark Model Answer Drawer -->
+                            <div id="ai-model-answer-drawer" class="ai-sample-drawer" style="display:none;">
+                                <div class="sample-drawer-header">
+                                    <div class="sample-drawer-title">
+                                        <i class="fa-solid fa-wand-magic-sparkles text-purple"></i>
+                                        <span>High-Scoring AI Benchmark Answer (STAR Format)</span>
+                                    </div>
+                                    <div class="sample-drawer-actions">
+                                        <button type="button" class="btn btn-outline btn-sm" onclick="copyAiModelAnswer()"><i class="fa-regular fa-copy"></i> Copy</button>
+                                        <button type="button" class="btn btn-primary btn-sm" onclick="insertAiModelAnswer()"><i class="fa-solid fa-arrow-turn-down"></i> Insert into Box</button>
+                                        <button type="button" class="btn-icon-sm" onclick="toggleAiModelAnswer()"><i class="fa-solid fa-xmark"></i></button>
+                                    </div>
+                                </div>
+                                <div class="sample-drawer-body" id="ai-model-answer-text">
+                                    Loading benchmark answer...
+                                </div>
+                            </div>
+
+                            <div class="textarea-wrapper">
+                                <textarea id="candidate-answer-input" class="form-control answer-textarea" rows="6" placeholder="Type your structured response here, or speak naturally into the microphone..."></textarea>
+                                <div class="word-counter">
+                                    <span id="word-count">0 words</span>
+                                </div>
+                            </div>
+
+                            <div class="response-actions" id="response-actions-container">
+                                <button class="btn btn-outline" id="btn-hint" onclick="provideAnswerHint()">
+                                    <i class="fa-regular fa-lightbulb"></i> Get Structuring Hint
+                                </button>
+                                <button class="btn btn-secondary btn-lg" id="btn-save-next" onclick="submitAndAdvanceDirectly()">
+                                    <span>Save & Next Question</span>
+                                    <i class="fa-solid fa-forward-step"></i>
+                                </button>
+                                <button class="btn btn-primary btn-lg" id="submit-answer-btn" onclick="submitCandidateAnswer()">
+                                    <span>Submit & Instant Evaluate</span>
+                                    <i class="fa-solid fa-paper-plane"></i>
+                                </button>
+                            </div>
+
+                            <!-- Post-Evaluation Main Stage Action Banner (Displayed after evaluation) -->
+                            <div id="post-eval-stage-banner" class="post-eval-banner" style="display:none;">
+                                <div class="post-eval-text">
+                                    <i class="fa-solid fa-circle-check text-emerald"></i>
+                                    <span id="post-eval-message">Turn Evaluated! Ready to proceed.</span>
+                                </div>
+                                <button class="btn btn-primary btn-lg pulse-btn" id="btn-stage-proceed" onclick="proceedToNextQuestion()">
+                                    <span id="stage-proceed-label">Proceed to Next Question</span>
+                                    <i class="fa-solid fa-arrow-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Real-time Evaluation Live Drawer -->
+                    <div class="card feedback-stage" id="feedback-panel">
+                        <div class="card-header flex-between">
+                            <h3><i class="fa-solid fa-clipboard-check text-cyan"></i> Instant Rubric Analysis</h3>
+                            <span class="badge badge-emerald" id="eval-verdict-badge">Waiting for Answer</span>
+                        </div>
+                        <div class="card-body eval-body" id="eval-body-content">
+                            <div class="eval-placeholder">
+                                <i class="fa-solid fa-chart-simple text-muted icon-giant"></i>
+                                <p>Submit your response to see instant prompt-engineered rubric scoring, strengths, gaps, and the ideal benchmark answer.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- VIEW 3: FINAL SCORECARD & DOSSIER -->
+            <section id="view-report" class="view-panel">
+                <div class="report-container">
+                    <div class="report-header-banner card">
+                        <div class="verdict-col">
+                            <span class="meta-label">3-PHASE HIRING COMMITTEE VERDICT</span>
+                            <h2 class="verdict-title" id="report-hiring-verdict">Strong Hire</h2>
+                            <p id="report-candidate-summary" class="report-summary-text">Candidate demonstrated superior technical depth, project credibility, and articulate 5-year vision across all multi-turn rounds.</p>
+                        </div>
+                        <div class="score-ring-col">
+                            <div class="score-ring">
+                                <span class="score-number" id="report-composite-score">88</span>
+                                <span class="score-sub">/ 100</span>
+                            </div>
+                            <span class="score-caption">Composite Rating</span>
+                        </div>
+                    </div>
+
+                    <!-- Competency Grid & Roadmap -->
+                    <div class="report-grid">
+                        <div class="card competency-card">
+                            <div class="card-header">
+                                <h3><i class="fa-solid fa-chart-pie text-cyan"></i> 3-Phase Competency Breakdown</h3>
+                            </div>
+                            <div class="card-body" id="competency-bars-container">
+                                <!-- Dynamic competency bars -->
+                            </div>
+                        </div>
+
+                        <div class="card highlights-card">
+                            <div class="card-header">
+                                <h3><i class="fa-solid fa-star text-amber"></i> Key Strengths & Growth Gaps</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="strengths-section">
+                                    <h4 class="section-sub-title text-emerald"><i class="fa-solid fa-circle-check"></i> Notable Strengths</h4>
+                                    <ul id="report-strengths-list" class="styled-list"></ul>
+                                </div>
+                                <div class="weakness-section mt-4">
+                                    <h4 class="section-sub-title text-amber"><i class="fa-solid fa-triangle-exclamation"></i> Growth Areas</h4>
+                                    <ul id="report-growth-list" class="styled-list"></ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 30-Day Personalized Mastery Roadmap -->
+                    <div class="card roadmap-card">
+                        <div class="card-header">
+                            <h3><i class="fa-solid fa-route text-purple"></i> Personalized 30-Day Career Mastery Roadmap</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="roadmap-timeline" id="report-roadmap-timeline">
+                                <!-- Dynamic roadmap items -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Full Session Transcript -->
+                    <div class="card transcript-card">
+                        <div class="card-header flex-between">
+                            <h3><i class="fa-solid fa-list-check text-cyan"></i> 3-Phase Full Interview Transcript & Feedback</h3>
+                            <button class="btn btn-secondary btn-sm" onclick="window.print()">
+                                <i class="fa-solid fa-print"></i> Print / Export Report
+                            </button>
+                        </div>
+                        <div class="card-body" id="report-transcript-container">
+                            <!-- Populated with all questions, answers & rubric feedback -->
+                        </div>
+                    </div>
+
+                    <!-- Footer Action Bar -->
+                    <div class="report-actions-footer">
+                        <button class="btn btn-secondary btn-lg" onclick="switchView('setup')">
+                            <i class="fa-solid fa-arrow-rotate-left"></i> Start New Interview
+                        </button>
+                        <button class="btn btn-primary btn-lg" onclick="window.print()">
+                            <i class="fa-solid fa-print"></i> Print / Export Report Dossier
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- VIEW 4: PROMPT ENGINEERING ARCHITECTURE SHOWCASE -->
+            <section id="view-prompts" class="view-panel">
+                <div class="prompts-showcase-container">
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h3><i class="fa-solid fa-layer-group text-cyan"></i> Applied Prompt Engineering Concepts in this Project</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="concepts-grid">
+                                <div class="concept-item">
+                                    <div class="concept-icon"><i class="fa-solid fa-user-astronaut"></i></div>
+                                    <h4>1. Role Prompting</h4>
+                                    <p>Adapts system prompt to assume high-fidelity assessor personas (Tech Lead, Culture Director, Tough Exec) with distinct behavioral constraints.</p>
+                                </div>
+                                <div class="concept-item">
+                                    <div class="concept-icon"><i class="fa-solid fa-scale-balanced"></i></div>
+                                    <h4>2. Evaluation Rubrics</h4>
+                                    <p>Decouples evaluation into 4 orthogonal dimensions (Technical Depth, STAR Framing, Clarity, Confidence) with mandatory candidate quote grounding.</p>
+                                </div>
+                                <div class="concept-item">
+                                    <div class="concept-icon"><i class="fa-solid fa-code-merge"></i></div>
+                                    <h4>3. Strict JSON Schemas</h4>
+                                    <p>Guarantees machine-parsable structured outputs for real-time frontend rendering and zero hallucinated format breakdown.</p>
+                                </div>
+                                <div class="concept-item">
+                                    <div class="concept-icon"><i class="fa-solid fa-arrows-split-up-and-left"></i></div>
+                                    <h4>4. 3-Phase Context Routing</h4>
+                                    <p>Dynamically routes context between Resume Deep-Dive, Technical Domain Rigor, and HR 5-Year Vision.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Prompts Code Inspection Panels -->
+                    <div class="prompts-code-panels">
+                        <div class="card prompt-box">
+                            <div class="card-header">
+                                <h4><i class="fa-solid fa-terminal text-cyan"></i> 1. 3-Phase System Interviewer Prompt</h4>
+                            </div>
+                            <div class="card-body">
+                                <pre><code id="code-system-prompt">Loading prompt blueprint...</code></pre>
+                            </div>
+                        </div>
+
+                        <div class="card prompt-box">
+                            <div class="card-header">
+                                <h4><i class="fa-solid fa-terminal text-emerald"></i> 2. Structured Evaluation Rubric Prompt</h4>
+                            </div>
+                            <div class="card-body">
+                                <pre><code id="code-eval-prompt">Loading prompt blueprint...</code></pre>
+                            </div>
+                        </div>
+
+                        <div class="card prompt-box">
+                            <div class="card-header">
+                                <h4><i class="fa-solid fa-terminal text-purple"></i> 3. Hiring Committee Final Assessment Prompt</h4>
+                            </div>
+                            <div class="card-body">
+                                <pre><code id="code-final-prompt">Loading prompt blueprint...</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- API Key / Settings Modal -->
+    <div class="modal-backdrop" id="api-modal" style="display:none;">
+        <div class="modal card">
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-gear text-cyan"></i> API Configuration & Engine Settings</h3>
+                <button class="btn-icon-sm" onclick="closeApiKeyModal()"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <p class="text-muted mb-3">The application includes a built-in <strong>Smart Dynamic Heuristic Engine</strong> that functions seamlessly without external keys. You can also supply an OpenAI API Key for live GPT-4o inference.</p>
+                <div class="form-group">
+                    <label for="modal-api-key">OpenAI API Key (Optional)</label>
+                    <input type="password" id="modal-api-key" class="form-control" placeholder="sk-proj-...">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeApiKeyModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="saveApiKeySettings()">Save Settings</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- End Session Confirmation Modal -->
+    <div class="modal-backdrop" id="end-session-modal" style="display:none;">
+        <div class="modal card">
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-phone-slash text-rose"></i> End Current Interview Session?</h3>
+                <button class="btn-icon-sm" onclick="closeEndSessionModal()"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <p class="text-muted mb-4">Would you like to conclude your interview and compile the <strong>Final Hiring Committee Dossier</strong> based on your answered questions, or discard and exit to the setup screen?</p>
+                <div class="end-session-options-grid">
+                    <div class="end-opt-card" onclick="terminateSessionToReport()">
+                        <i class="fa-solid fa-trophy text-cyan"></i>
+                        <h4>Evaluate & View Final Scorecard</h4>
+                        <p>Generate committee scores, strengths, weaknesses & 30-day mastery plan for completed questions.</p>
+                    </div>
+                    <div class="end-opt-card" onclick="terminateSessionToSetup()">
+                        <i class="fa-solid fa-rotate-left text-amber"></i>
+                        <h4>Exit & Start New Interview</h4>
+                        <p>Discard the current in-progress session and return to candidate configuration.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeEndSessionModal()">
+                    <i class="fa-solid fa-arrow-left"></i> Continue Interview
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Full-Screen Loading Overlay -->
+    <div id="loading-screen" class="loading-overlay" style="display:none;">
+        <div class="loading-card card">
+            <div class="loading-spinner-ring">
+                <div class="spinner-core">
+                    <i class="fa-solid fa-microchip"></i>
+                </div>
+            </div>
+            <h2 id="loading-title">Synthesizing 3-Phase Interview...</h2>
+            <p id="loading-subtitle" class="text-muted">Analyzing resume context & constructing custom questions</p>
+            
+            <div class="loading-steps-list">
+                <div class="loading-step-item active" id="lstep-1">
+                    <i class="fa-solid fa-circle-check"></i>
+                    <span>1. Parsing Resume Projects & Technical Keywords</span>
+                </div>
+                <div class="loading-step-item" id="lstep-2">
+                    <i class="fa-solid fa-circle-notch fa-spin"></i>
+                    <span>2. Generating 3-Phase Question Matrix & Benchmarks</span>
+                </div>
+                <div class="loading-step-item" id="lstep-3">
+                    <i class="fa-regular fa-circle"></i>
+                    <span>3. Calibrating AI Assessor Voice & Evaluation Rubrics</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast"></div>
+
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
